@@ -1,0 +1,27 @@
+# Build directories
+**/\.build*
+**/GNU*Debug/**
+**/GNU*Release/**
+cmake-build-*/**
+
+# vim temporary files
+*.swp
+*.swo
+
+# Eclipse related
+*.settings/
+
+# Binary files
+output/**
+*.o
+*.so
+*.d
+*.out
+*.bin
+*.map
+
+# temporarily folders
+.patches
+
+# Intellij
+.idea/**
