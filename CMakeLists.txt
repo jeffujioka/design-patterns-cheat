@@ -12,7 +12,10 @@ file(GLOB_RECURSE SRCS src/**.cpp)
 include_directories(externals/third_party/googletest/googlemock/include)
 include_directories(externals/third_party/googletest/googletest/include)
 
-add_executable(${DESPAT_PROJECT_NAME} ${SRCS})
+# Project's directory
+include_directories(src)
+
+add_executable(${DESPAT_PROJECT_NAME} ${SRCS} src/fundamental/Product.h src/fundamental/Product_Test.cpp)
 
 # Add target build dependency to gtest and gmock
 add_dependencies(${DESPAT_PROJECT_NAME} gtest gmock)
