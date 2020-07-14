@@ -31,4 +31,20 @@ TEST(BankAccount, IntegrationUndo)
   commands.Undo();
   EXPECT_EQ(0, ba.balance());
 }
+TEST(BankAccount, IntegrationTransfer)
+{
+  BankAccount b1("Jeff");
+  BankAccount b2("Maria");
+  b1.Deposit(550);
+
+  MoneyTransferCommand transfer{b1, b2, 100};
+
+  transfer.Call();
+  EXPECT_EQ(450.0, b1.balance());
+  EXPECT_EQ(100.0, b2.balance());
+
+  transfer.Undo();
+  EXPECT_EQ(550.0, b1.balance());
+  EXPECT_EQ(0.0, b2.balance());
+}
 

@@ -96,7 +96,7 @@ class BankAccountCommand : public Command
   }
 };
 
-class CompositeBankAccount : Command
+class CompositeBankAccount : public Command
 {
   std::vector<BankAccountCommand> commands_;
 
@@ -123,4 +123,15 @@ class CompositeBankAccount : Command
       it->Undo();
     }
   }
+};
+
+class MoneyTransferCommand : public CompositeBankAccount
+{
+ public:
+  MoneyTransferCommand(BankAccount &from,
+                       BankAccount &to,
+                       double amount)
+      : CompositeBankAccount{
+      BankAccountCommand{from, BankAccountCommand::kWithdraw, amount},
+      BankAccountCommand{to, BankAccountCommand::kDeposit, amount}} {}
 };
