@@ -45,9 +45,10 @@ class BankAccount
 class Command
 {
  protected:
-  bool succeeded;
+  bool succeeded_;
  public:
   virtual ~Command() = default;
+  bool succeeded() const { return succeeded_; }
   virtual void Call() = 0;
   virtual void Undo() = 0;
 };
@@ -71,12 +72,12 @@ class BankAccountCommand : public Command
     switch (action_) {
       case kDeposit:
         account_.Deposit(amount_);
-        succeeded = true;
+        succeeded_ = true;
         break;
 
       case kWithdraw:
-        if (account_.Withdraw(amount_)) succeeded = true;
-        else succeeded = false;
+        if (account_.Withdraw(amount_)) succeeded_ = true;
+        else succeeded_ = false;
         break;
 
       default: break;
@@ -90,7 +91,7 @@ class BankAccountCommand : public Command
         account_.Withdraw(amount_);
         break;
       case kWithdraw:
-        if (succeeded) account_.Deposit(amount_);
+        if (succeeded_) account_.Deposit(amount_);
         break;
     }
   }
@@ -98,6 +99,7 @@ class BankAccountCommand : public Command
 
 class CompositeBankAccount : public Command
 {
+ protected:
   std::vector<BankAccountCommand> commands_;
 
  public:
@@ -125,13 +127,37 @@ class CompositeBankAccount : public Command
   }
 };
 
-class MoneyTransferCommand : public CompositeBankAccount
+class DependentBankAccount : public CompositeBankAccount
+{
+ public:
+  DependentBankAccount(const std::initializer_list<BankAccountCommand> &items)
+      : CompositeBankAccount(items) {}
+
+  void Call() override
+  {
+    bool success = true;
+    for (auto& cmd : commands_)
+    {
+      if (success)
+      {
+        cmd.Call();
+        success = cmd.succeeded();
+      }
+      else
+      {
+        success = false;
+      }
+    }
+  }
+};
+
+class MoneyTransferCommand : public DependentBankAccount
 {
  public:
   MoneyTransferCommand(BankAccount &from,
                        BankAccount &to,
                        double amount)
-      : CompositeBankAccount{
+      : DependentBankAccount{
       BankAccountCommand{from, BankAccountCommand::kWithdraw, amount},
       BankAccountCommand{to, BankAccountCommand::kDeposit, amount}} {}
 };
