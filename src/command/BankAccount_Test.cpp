@@ -2,7 +2,7 @@
 
 #include <gtest/gtest.h>
 
-TEST(BankAccount, IntegrationTest)
+TEST(BankAccount, Integration)
 {
   BankAccount ba("Jeff");
   CompositeBankAccount commands{
@@ -15,3 +15,20 @@ TEST(BankAccount, IntegrationTest)
   commands.Undo();
   EXPECT_EQ(0, ba.balance());
 }
+
+TEST(BankAccount, IntegrationUndo)
+{
+  BankAccount ba("Jeff");
+  CompositeBankAccount commands{
+    BankAccountCommand{ba, BankAccountCommand::kDeposit, 200},
+    BankAccountCommand{ba, BankAccountCommand::kWithdraw, 100},
+    BankAccountCommand{ba, BankAccountCommand::kWithdraw, 100},
+    BankAccountCommand{ba, BankAccountCommand::kDeposit, 100},
+    BankAccountCommand{ba, BankAccountCommand::kWithdraw, 1000}};
+
+  commands.Call();
+  EXPECT_EQ(100.0, ba.balance());
+  commands.Undo();
+  EXPECT_EQ(0, ba.balance());
+}
+

@@ -26,20 +26,26 @@ class BankAccount
          << balance_ << endl;
   }
 
-  void Withdraw(double amount)
+  bool Withdraw(double amount)
   {
+    using namespace std;
     if (balance_ - amount >= overdraft_limit)
     {
       balance_ -= amount;
-      using namespace std;
       cout << " @" << name_ << ": Withdraw €" << amount << ", balance now €"
            << balance_ << endl;
+      return true;
     }
+    cout << " @" << name_ << ": FAILED! Withdraw €" << amount
+         << ", balance now €" << balance_ << endl;
+    return false;
   }
 };
 
 class Command
 {
+ protected:
+  bool succeeded;
  public:
   virtual ~Command() = default;
   virtual void Call() = 0;
@@ -65,10 +71,12 @@ class BankAccountCommand : public Command
     switch (action_) {
       case kDeposit:
         account_.Deposit(amount_);
+        succeeded = true;
         break;
 
       case kWithdraw:
-        account_.Withdraw(amount_);
+        if (account_.Withdraw(amount_)) succeeded = true;
+        else succeeded = false;
         break;
 
       default: break;
@@ -82,7 +90,7 @@ class BankAccountCommand : public Command
         account_.Withdraw(amount_);
         break;
       case kWithdraw:
-        account_.Deposit(amount_);
+        if (succeeded) account_.Deposit(amount_);
         break;
     }
   }
