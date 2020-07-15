@@ -15,7 +15,7 @@ include_directories(externals/third_party/googletest/googletest/include)
 # Project's directory
 include_directories(src)
 
-add_executable(${DESPAT_PROJECT_NAME} ${SRCS})
+add_executable(${DESPAT_PROJECT_NAME} ${SRCS} src/bridge/Pimpl.h src/bridge/Person.cpp src/bridge/Person.h src/bridge/Person_Test.cpp)
 
 # Add target build dependency to gtest and gmock
 add_dependencies(${DESPAT_PROJECT_NAME} gtest gmock)
