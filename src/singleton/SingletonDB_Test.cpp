@@ -33,3 +33,50 @@ TEST_F(DBTest, IntegrationTest)
   EXPECT_EQ(13'929'286, SingletonDB::GetInstance().population("Tokyo"));
   EXPECT_EQ(21'542'000, SingletonDB::GetInstance().population("Beijing"));
 }
+
+TEST_F(DBTest, IntegrationTotalPopulation)
+{
+  vector<string> capitals = {
+      "Paris", "Brasília", "Rome", "Berlin", "London", "Tokyo", "Beijing"};
+  RecordFinder finder(SingletonDB::GetInstance());
+
+  EXPECT_EQ(55'885'497, finder.total_population(capitals));
+}
+
+// TODO replace this for gmock class
+struct DummyDB : public Database
+{
+  map<string, int> populations;
+
+  DummyDB()
+  {
+    populations["cap_a"] = 10;
+    populations["cap_b"] = 20;
+    populations["cap_c"] = 30;
+    populations["cap_d"] = 40;
+  }
+
+  int population(const string& name) override { return populations[name]; }
+};
+
+TEST(SingletonDB_Test, PopulationDummy)
+{
+  DummyDB db;
+  RecordFinder finder(db);
+
+  // TODO replace by EXPEC_CALL + Return
+  EXPECT_EQ(10, finder.population("cap_a"));
+  EXPECT_EQ(20, finder.population("cap_b"));
+  EXPECT_EQ(30, finder.population("cap_c"));
+  EXPECT_EQ(40, finder.population("cap_d"));
+}
+
+TEST(SingletonDB_Test, TotalPopulation)
+{
+  vector<string> capitals = {
+      "cap_a", "cap_b", "cap_c", "cap_d"};
+  DummyDB db;
+  RecordFinder finder(db);
+
+  EXPECT_EQ(100, finder.total_population(capitals));
+}

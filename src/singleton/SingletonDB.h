@@ -3,6 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <fstream>
+#include <vector>
 #include <iostream>
 using namespace std;
 
@@ -46,5 +47,20 @@ class SingletonDB : public Database
   int population(const string& name) override
   {
     return populations_[name];
+  }
+};
+
+struct RecordFinder
+{
+  Database& db;
+  RecordFinder(Database &db) : db(db) {}
+
+  int population(const string& name) { return db.population(name); }
+
+  int total_population(vector<string>& capitals)
+  {
+    int total = 0;
+    for (auto& name : capitals) total += db.population(name);
+    return total;
   }
 };
