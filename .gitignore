@@ -25,3 +25,6 @@ output/**
 
 # Intellij
 .idea/**
+
+# 3rd-party
+3rd-party
