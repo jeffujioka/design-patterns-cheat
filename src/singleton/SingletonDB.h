@@ -4,7 +4,8 @@
 #include <unordered_map>
 #include <fstream>
 #include <vector>
-#include <iostream>
+#include <boost/lexical_cast.hpp>
+
 using namespace std;
 
 class Database
@@ -27,8 +28,7 @@ class SingletonDB : public Database
     while(getline(ifs, cap_str))
     {
       getline(ifs, popu_str);
-      int popu = stoi(popu_str);
-      populations_[cap_str] = popu;
+      populations_[cap_str] = boost::lexical_cast<int>(popu_str);;
     }
   }
 
