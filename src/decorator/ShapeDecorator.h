@@ -70,4 +70,46 @@ struct TransparentShape : Shape {
 
 }
 
+namespace statical
+{
+  template<typename T>
+  struct ColoredShape : T
+  {
+    static_assert(is_base_of<Shape, T>::value,
+        "Template argument must be a Shape");
+    string color;
+
+    template<typename... Args>
+    ColoredShape(const string &color, Args... args)
+      : T{forward<Args>(args)...}, color(color) {}
+
+    string str() const override
+    {
+      ostringstream oss;
+      oss << T::str() << " has the color " << color;
+      return oss.str();
+    }
+  };
+
+  template<typename T>
+  struct TransparentShpae : T
+  {
+    static_assert(is_base_of<Shape, T>::value,
+                  "Template argument must be a Shape");
+    uint8_t transparency;
+
+    template<typename... Args>
+    TransparentShpae(uint8_t transparency, Args... args)
+      : T{forward<Args>(args)...}, transparency(transparency) {}
+
+    string str() const override
+    {
+      ostringstream oss;
+      oss << T::str() << " has "
+          << transparency / 255.f * 100.f
+          << "% transparency";
+      return oss.str();
+    }
+  };
+}
 }
