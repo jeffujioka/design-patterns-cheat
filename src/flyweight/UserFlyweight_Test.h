@@ -4,6 +4,7 @@
 #include <ostream>
 #include <iostream>
 #include <boost/bimap/bimap.hpp>
+#include <boost/flyweight.hpp>
 
 using namespace std;
 using boost::bimaps::bimap;
@@ -65,6 +66,23 @@ ostream &operator<<(ostream &os, const User &user) {
      << " last_name: " << user.get_last_name() << endl;
   return os;
 }
+
+}
+
+namespace boostflyweight
+{
+
+class User
+{
+  boost::flyweight<string> first_name_, last_name_;
+ public:
+  User(const string& first_name,
+       const string& last_name)
+       : first_name_(first_name), last_name_(last_name) {}
+
+  const string& get_first_name() const { return first_name_.get(); }
+  const string& get_last_name()  const { return last_name_.get();  }
+};
 
 }
 }
