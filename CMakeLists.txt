@@ -26,7 +26,7 @@ include_directories(externals/third_party/googletest/googletest/include)
 # Project's directory
 include_directories(src)
 
-add_executable(${DESPAT_PROJECT_NAME} ${SRCS} src/bridge/Pimpl.h src/bridge/Person.cpp src/bridge/Person.h src/bridge/Person_Test.cpp src/bridge/ShapeRenderer.h src/bridge/ShapeRenderer_Test.cpp src/singleton/SingletonDB.h src/singleton/SingletonDB_Test.cpp src/decorator/ShapeDecorator.h src/decorator/DynamicShapeDecorator_Test.cpp src/decorator/StaticShapeDecorator.cpp src/decorator/Logger.h src/decorator/Logger_Test.cpp)
+add_executable(${DESPAT_PROJECT_NAME} ${SRCS} src/bridge/Pimpl.h src/bridge/Person.cpp src/bridge/Person.h src/bridge/Person_Test.cpp src/bridge/ShapeRenderer.h src/bridge/ShapeRenderer_Test.cpp src/singleton/SingletonDB.h src/singleton/SingletonDB_Test.cpp src/decorator/ShapeDecorator.h src/decorator/DynamicShapeDecorator_Test.cpp src/decorator/StaticShapeDecorator.cpp src/decorator/Logger.h src/decorator/Logger_Test.cpp src/flyweight/UserFlyweight_Test.h src/flyweight/UserFlyweight_Test.cpp)
 
 # Add target build dependency to gtest and gmock
 add_dependencies(${DESPAT_PROJECT_NAME} gtest gmock)
